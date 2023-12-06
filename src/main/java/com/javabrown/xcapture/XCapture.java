@@ -1,5 +1,6 @@
 package com.javabrown.xcapture;
 
+import com.javabrown.core.utils.ui.PortMonitorPanel;
 import com.javabrown.xcapture.screen.SnippingWindow;
 
 import javax.swing.*;
@@ -9,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class XCapture {
-    public SnippingWindow selectionWindow;
+    public SnippingWindow snippingWindow;
     private Robot robot;
     private SystemTrayManager systemTrayManager;
 
@@ -25,13 +26,13 @@ public class XCapture {
     }
 
     public void showSelectionWindow() {
-        if(selectionWindow != null) {
-            selectionWindow.setVisible(false);
-            selectionWindow = null;
+        if(snippingWindow != null) {
+            snippingWindow.setVisible(false);
+            snippingWindow = null;
         }
 
-        selectionWindow = new SnippingWindow(robot);
-        selectionWindow.setVisible(true);
+        snippingWindow = new SnippingWindow(robot);
+        snippingWindow.setVisible(true);
     }
 }
 
@@ -58,7 +59,7 @@ class SystemTrayManager {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
-                    app.selectionWindow.setVisible(true);
+                    app.snippingWindow.setVisible(true);
                 }
             }
         });
@@ -119,6 +120,19 @@ class PopupMenuManager {
             System.out.println("Stop Capture");
         });
         popupMenu.add(stopItem);
+
+        MenuItem portUsesItem = new MenuItem("Port Uses");
+        portUsesItem.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                JFrame frame = new JFrame("Port Monitor Panel");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setSize(400, 300);
+                frame.add(new PortMonitorPanel());
+                frame.setVisible(true);
+            });
+            JOptionPane.showMessageDialog(null, "XCapture v1.0", "About", JOptionPane.INFORMATION_MESSAGE);
+        });
+        popupMenu.add(portUsesItem);
 
         MenuItem aboutItem = new MenuItem("About");
         aboutItem.addActionListener(e -> {

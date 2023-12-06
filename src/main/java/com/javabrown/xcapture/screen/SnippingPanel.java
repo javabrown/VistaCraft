@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 public class SnippingPanel extends JPanel {
     private BufferedImage initialScreenshot;
     private Rectangle selectionRect;
-    private Rectangle selectedRectengularSnippingArea;
+    private Rectangle selectedRectangularSnippingArea;
     private Point startPoint;
 
     private Callback callbackOnSelectionComplete;
@@ -31,7 +31,7 @@ public class SnippingPanel extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (selectionRect != null) {
-                    selectedRectengularSnippingArea = selectionRect;
+                    selectedRectangularSnippingArea = selectionRect;
                     callbackOnSelectionComplete.trigger();
                 }
             }
@@ -54,7 +54,14 @@ public class SnippingPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(initialScreenshot, 0, 0, this);
+
+        // Draw a border around the panel
+        g.setColor(Color.BLACK);
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+
+        // Convert the screenshot to black and white (grayscale)
+        BufferedImage grayscaleImage = convertToGrayscale(initialScreenshot);
+        g.drawImage(grayscaleImage, 1, 1, this);
 
         if (selectionRect != null) {
             g.setColor(new Color(255, 255, 0, 100));
@@ -62,7 +69,18 @@ public class SnippingPanel extends JPanel {
         }
     }
 
-    public Rectangle getSelectedRectengularSnippingArea() {
-        return this.selectedRectengularSnippingArea;
+    public Rectangle getSelectedRectangularSnippingArea() {
+        return this.selectedRectangularSnippingArea;
+    }
+
+    private BufferedImage convertToGrayscale(BufferedImage colorImage) {
+        BufferedImage grayscaleImage = new BufferedImage(
+                colorImage.getWidth(), colorImage.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+
+        Graphics g = grayscaleImage.getGraphics();
+        g.drawImage(colorImage, 0, 0, null);
+        g.dispose();
+
+        return grayscaleImage;
     }
 }

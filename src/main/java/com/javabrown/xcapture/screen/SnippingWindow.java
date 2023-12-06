@@ -27,9 +27,9 @@ public class SnippingWindow extends JWindow {
      * ON SNIPPING PANEL SELECTION COMPLETE
      */
     private void launchRecordingFrame() {
-        this.selectionPanel.getSelectedRectengularSnippingArea();
+        this.selectionPanel.getSelectedRectangularSnippingArea();
         this.recordingFrame = new CaptureFrame("Recording Screen", this.robot,
-                this.selectionPanel.getSelectedRectengularSnippingArea());
+                this.selectionPanel.getSelectedRectangularSnippingArea());
         this.recordingFrame.setVisible(true);
         this.dispose();
     }
